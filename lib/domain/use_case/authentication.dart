@@ -11,9 +11,10 @@ class Authentication {
       await _sharedPreferences.retrieveData<bool>('logged') ?? false;
 
   Future<bool> login(user, password) async {
-
-    final loggedUser = await _sharedPreferences.retrieveData<String>('user');
-    final loggedPassword = await _sharedPreferences.retrieveData<String>('password');
+    final loggedUser =
+        await _sharedPreferences.retrieveData<String>('user') ?? 'NoUser';
+    final loggedPassword =
+        await _sharedPreferences.retrieveData<String>('password') ?? 'NoPass';
 
     if (user == loggedUser && password == loggedPassword) {
       await _sharedPreferences.storeData('logged', true);
@@ -23,15 +24,17 @@ class Authentication {
 
     // verificar si user y password coinciden con los almacenados
     // en ese caso cambiar el estado de loggeed y devolver  Future.value(true);
-
-    
   }
 
-  Future<void> signup(user, password) async {
+  Future<bool> signup(user, password) async {
+    await _sharedPreferences.storeData<String>('user', user);
+    await _sharedPreferences.storeData<String>('password', password);
+    return Future.value(true);
+
     // almancenar user y password
   }
 
   void logout() async {
-    // cambiar loggeed
+    await _sharedPreferences.storeData('logged', false);
   }
 }
